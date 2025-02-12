@@ -8,6 +8,7 @@ Author:Duman Rahime
 ```Sparkonto
 ```Krditkonto
 ```Girokonto
+```Konto
  
 git checkout origin/master
  
