@@ -1,37 +1,18 @@
-public class Kreditkonto {
-    private String kontoinhaber;
-    private double kontostand;
+public class Kreditkonto extends Konto {
     private double kreditlimit;
 
     public Kreditkonto(String kontoinhaber, double startBetrag, double kreditlimit) {
-        this.kontoinhaber = kontoinhaber;
-        this.kontostand = startBetrag;
+        super(kontoinhaber, startBetrag);
         this.kreditlimit = kreditlimit;
     }
 
-    public void einzahlen(double betrag) {
-        if (betrag > 0) {
-            kontostand += betrag;
-            System.out.println(betrag + "€ eingezahlt. Neuer Kontostand: " + kontostand + "€");
-        } else {
-            System.out.println("Fehler: Der Betrag muss positiv sein.");
-        }
-    }
-
+    @Override
     public void abheben(double betrag) {
-        if (betrag <= 0) {
-            System.out.println("Fehler: Der Betrag muss größer als 0 sein.");
-            return;
-        }
-        if ((kontostand - betrag) >= -kreditlimit) {
+        if (betrag > 0 && (kontostand - betrag) >= -kreditlimit) {
             kontostand -= betrag;
             System.out.println(betrag + "€ abgehoben. Neuer Kontostand: " + kontostand + "€");
         } else {
-            System.out.println("Abhebung nicht möglich! Kreditlimit von " + kreditlimit + "€ überschritten.");
+            System.out.println("Abhebung nicht möglich! Kreditlimit überschritten.");
         }
-    }
-
-    public void kontoauszug() {
-        System.out.println("Kreditkonto von " + kontoinhaber + ": " + kontostand + "€");
     }
 }

@@ -1,21 +1,12 @@
-public class Girokonto {
-    private String kontoinhaber;
-    private double kontostand;
+public class Girokonto extends Konto {
     private double ueberziehungsrahmen;
 
     public Girokonto(String kontoinhaber, double startBetrag, double ueberziehungsrahmen) {
-        this.kontoinhaber = kontoinhaber;
-        this.kontostand = startBetrag;
+        super(kontoinhaber, startBetrag);
         this.ueberziehungsrahmen = ueberziehungsrahmen;
     }
 
-    public void einzahlen(double betrag) {
-        if (betrag > 0) {
-            kontostand += betrag;
-            System.out.println(betrag + "€ eingezahlt. Neuer Kontostand: " + kontostand + "€");
-        }
-    }
-
+    @Override
     public void abheben(double betrag) {
         if (betrag > 0 && (kontostand + ueberziehungsrahmen) >= betrag) {
             kontostand -= betrag;
@@ -23,9 +14,5 @@ public class Girokonto {
         } else {
             System.out.println("Abhebung nicht möglich! Überziehungsrahmen überschritten.");
         }
-    }
-
-    public void kontoauszug() {
-        System.out.println("Girokonto von " + kontoinhaber + ": " + kontostand + "€");
     }
 }

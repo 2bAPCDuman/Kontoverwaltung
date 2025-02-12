@@ -1,59 +1,110 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+    private static ArrayList<Konto> konten = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        // Beispiel-Konten erstellen
-        Girokonto giro = new Girokonto("Max Mustermann", 1000, 500);
-        Sparkonto spar = new Sparkonto("Lisa Müller", 2000);
-        Kreditkonto kredit = new Kreditkonto("Tom Schneider", 500, 1000);
-
         int auswahl;
         do {
             System.out.println("\n=== Kontoverwaltung ===");
-            System.out.println("1. Geld einzahlen");
-            System.out.println("2. Geld abheben");
-            System.out.println("3. Kontoauszug anzeigen");
-            System.out.println("4. Programm beenden");
+            System.out.println("1. Konto anlegen");
+            System.out.println("2. Geld einzahlen");
+            System.out.println("3. Geld abheben");
+            System.out.println("4. Kontoauszug anzeigen");
+            System.out.println("5. Überweisung");
+            System.out.println("6. Alle Konten anzeigen");
+            System.out.println("0. Programm beenden");
             System.out.print("Wähle eine Option: ");
             auswahl = scanner.nextInt();
 
-            if (auswahl >= 1 && auswahl <= 3) {
-                System.out.println("Welches Konto?");
-                System.out.println("1. Girokonto");
-                System.out.println("2. Sparkonto");
-                System.out.println("3. Kreditkonto");
-                System.out.print("Wähle eine Option: ");
-                int kontoWahl = scanner.nextInt();
-
-                switch (auswahl) {
-                    case 1: // Einzahlen
-                        System.out.print("Betrag eingeben: ");
-                        double einzahlenBetrag = scanner.nextDouble();
-                        if (kontoWahl == 1) giro.einzahlen(einzahlenBetrag);
-                        else if (kontoWahl == 2) spar.einzahlen(einzahlenBetrag);
-                        else if (kontoWahl == 3) kredit.einzahlen(einzahlenBetrag);
-                        break;
-
-                    case 2: // Abheben
-                        System.out.print("Betrag eingeben: ");
-                        double abhebenBetrag = scanner.nextDouble();
-                        if (kontoWahl == 1) giro.abheben(abhebenBetrag);
-                        else if (kontoWahl == 2) spar.abheben(abhebenBetrag);
-                        else if (kontoWahl == 3) kredit.abheben(abhebenBetrag);
-                        break;
-
-                    case 3: // Kontoauszug anzeigen
-                        if (kontoWahl == 1) giro.kontoauszug();
-                        else if (kontoWahl == 2) spar.kontoauszug();
-                        else if (kontoWahl == 3) kredit.kontoauszug();
-                        break;
-                }
+            switch (auswahl) {
+                case 1 -> kontoAnlegen();
+                case 2 -> geldEinzahlen();
+                case 3 -> geldAbheben();
+                case 4 -> kontoAuszug();
+                case 5 -> ueberweisung();
+                case 6 -> alleKontenAnzeigen();
+                case 0 -> System.out.println("Programm beendet.");
+                default -> System.out.println("Ungültige Eingabe.");
             }
-        } while (auswahl != 4);
-
-        System.out.println("Programm beendet.");
+        } while (auswahl != 0);
         scanner.close();
+    }
+
+    private static void kontoAnlegen() {
+        System.out.println("Kontotyp wählen: 1. Girokonto  2. Sparkonto  3. Kreditkonto");
+        int typ = scanner.nextInt();
+        System.out.print("Name des Kontoinhabers: ");
+        String name = scanner.next();
+        System.out.print("Startbetrag: ");
+        double startBetrag = scanner.nextDouble();
+
+        switch (typ) {
+            case 1 -> {
+                System.out.print("Überziehungsrahmen: ");
+                double ueberziehung = scanner.nextDouble();
+                konten.add(new Girokonto(name, startBetrag, ueberziehung));
+            }
+            case 2 -> konten.add(new Sparkonto(name, startBetrag));
+            case 3 -> {
+                System.out.print("Kreditlimit: ");
+                double kreditlimit = scanner.nextDouble();
+                konten.add(new Kreditkonto(name, startBetrag, kreditlimit));
+            }
+            default -> System.out.println("Ungültige Auswahl.");
+        }
+    }
+
+    private static void geldEinzahlen() {
+        Konto konto = kontoAuswaehlen();
+        if (konto != null) {
+            System.out.print("Betrag: ");
+            konto.einzahlen(scanner.nextDouble());
+        }
+    }
+
+    private static void geldAbheben() {
+        Konto konto = kontoAuswaehlen();
+        if (konto != null) {
+            System.out.print("Betrag: ");
+            konto.abheben(scanner.nextDouble());
+        }
+    }
+
+    private static void kontoAuszug() {
+        Konto konto = kontoAuswaehlen();
+        if (konto != null) konto.kontoauszug();
+    }
+
+    private static void ueberweisung() {
+        System.out.println("Von welchem Konto?");
+        Konto vonKonto = kontoAuswaehlen();
+        System.out.println("Auf welches Konto?");
+        Konto aufKonto = kontoAuswaehlen();
+        if (vonKonto != null && aufKonto != null) {
+            System.out.print("Betrag: ");
+            vonKonto.ueberweisen(aufKonto, scanner.nextDouble());
+        }
+    }
+
+    private static void alleKontenAnzeigen() {
+        for (Konto k : konten) {
+            k.kontoauszug();
+        }
+    }
+
+    private static Konto kontoAuswaehlen() {
+        if (konten.isEmpty()) {
+            System.out.println("Keine Konten vorhanden.");
+            return null;
+        }
+        for (int i = 0; i < konten.size(); i++) {
+            System.out.println((i + 1) + ". " + konten.get(i).kontoinhaber);
+        }
+        System.out.print("Wähle ein Konto: ");
+        int index = scanner.nextInt() - 1;
+        return (index >= 0 && index < konten.size()) ? konten.get(index) : null;
     }
 }
