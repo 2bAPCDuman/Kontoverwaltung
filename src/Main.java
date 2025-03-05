@@ -3,7 +3,8 @@ import java.util.Scanner;
 
 public class Main {
     private static ArrayList<Konto> konten = new ArrayList<>();
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
+    private static String inhaber;
 
     public static void main(String[] args) {
         int auswahl;
@@ -45,13 +46,13 @@ public class Main {
             case 1 -> {
                 System.out.print("Überziehungsrahmen: ");
                 double ueberziehung = scanner.nextDouble();
-                konten.add(new Girokonto(name, startBetrag, ueberziehung));
+                konten.add(new Girokonto(name, inhaber, startBetrag, ueberziehung));
             }
-            case 2 -> konten.add(new Sparkonto(name, startBetrag));
+
             case 3 -> {
                 System.out.print("Kreditlimit: ");
                 double kreditlimit = scanner.nextDouble();
-                konten.add(new Kreditkonto(name, startBetrag, kreditlimit));
+                konten.add(new Kreditkonto(name, inhaber, startBetrag, kreditlimit));
             }
             default -> System.out.println("Ungültige Auswahl.");
         }

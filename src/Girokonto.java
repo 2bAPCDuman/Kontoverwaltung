@@ -1,10 +1,12 @@
 public class Girokonto extends Konto {
     private double ueberziehungsrahmen;
 
-    public Girokonto(String kontoinhaber, double startBetrag, double ueberziehungsrahmen) {
+    public Girokonto(String kontoinhaber, String inhaber, double startBetrag, double ueberziehungsrahmen) {
         super(kontoinhaber, startBetrag);
         this.ueberziehungsrahmen = ueberziehungsrahmen;
     }
+
+
 
     @Override
     public void abheben(double betrag) {

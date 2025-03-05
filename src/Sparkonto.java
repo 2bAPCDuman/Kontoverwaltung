@@ -1,6 +1,7 @@
 public class Sparkonto extends Konto {
-    public Sparkonto(String kontoinhaber, double startBetrag) {
-        super(kontoinhaber, startBetrag);
+
+    public Sparkonto(String kontonummer, String inhaber, double startBetrag) {
+        super(kontonummer, inhaber, startBetrag);
     }
 
     @Override
